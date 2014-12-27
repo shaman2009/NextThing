@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:text= "赞"
+        android:id="@+id/like_count"
         />
 
     <LinearLayout
@@ -22,15 +23,18 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="足球大师"/>
+            android:text="足球大师"
+            android:id="@+id/title"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="超真实 AI 引擎足球经理人游戏，拥有超过 5000 名球员的实时数据"/>
+            android:text="超真实 AI 引擎足球经理人游戏，拥有超过 5000 名球员的实时数据"
+            android:id="@+id/description"/>
         </LinearLayout>
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"/>
+        android:layout_marginRight="10dp"
+        android:id="@+id/image"/>
 
 </LinearLayout>
