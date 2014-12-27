@@ -1,11 +1,16 @@
 package app.next.udacity.com.nextthing;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -18,7 +23,8 @@ public class NextThingFragment extends Fragment {
     NextThingAdapter mNextThingAdapter ;
 
     @InjectView(R.id.listView)
-    ListView mListView;
+    PullToRefreshListView mListView;
+    Handler handler = new Handler();
 
     public NextThingFragment() {
         mNextThingAdapter = new NextThingAdapter() ;
@@ -34,6 +40,25 @@ public class NextThingFragment extends Fragment {
             mNextThingAdapter.addOneData(data);
         }
         mListView.setAdapter(mNextThingAdapter);
+        mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+            @Override
+            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+                Toast.makeText(getActivity(),"refresh",Toast.LENGTH_SHORT).show();
+                for (int i = 0; i < 5; i++) {
+                    String data = "title" ;
+                    mNextThingAdapter.addOneData(data);
+                }
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mListView.onRefreshComplete();
+                    }
+                },2000);
+
+
+
+            }
+        });
         return rootView;
     }
 }
