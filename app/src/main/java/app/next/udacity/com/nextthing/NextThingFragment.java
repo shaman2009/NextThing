@@ -15,11 +15,13 @@ import butterknife.InjectView;
  */
 public class NextThingFragment extends Fragment {
 
+    NextThingAdapter mNextThingAdapter ;
 
     @InjectView(R.id.listView)
     ListView mListView;
 
     public NextThingFragment() {
+        mNextThingAdapter = new NextThingAdapter() ;
     }
 
     @Override
@@ -27,7 +29,11 @@ public class NextThingFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.inject(this, rootView);
-        mListView.setAdapter(new NextThingAdapter());
+        for (int i = 0; i < 20; i++) {
+            String data = "title" ;
+            mNextThingAdapter.addOneData(data);
+        }
+        mListView.setAdapter(mNextThingAdapter);
         return rootView;
     }
 }

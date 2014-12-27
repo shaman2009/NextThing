@@ -7,6 +7,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -14,14 +16,27 @@ import butterknife.InjectView;
  * Created by Shaman on 12/27/14.
  */
 public class NextThingAdapter extends BaseAdapter {
-    @Override
-    public int getCount() {
-        return 5;
+    private ArrayList<String> arrayList = new ArrayList<>();
+
+    public void updateData(ArrayList<String> datas){
+        arrayList.addAll(datas);
+        notifyDataSetChanged();
+    }
+
+    public void addOneData(String data){
+        arrayList.add(data);
+        notifyDataSetChanged();
     }
 
     @Override
-    public Object getItem(int position) {
-        return null;
+    public int getCount() {
+        return arrayList.size();
+    }
+
+    @Override
+    public Object getItem(int position)
+    {
+        return arrayList.get(position);
     }
 
     @Override
