@@ -61,5 +61,7 @@ public class NextThingFragment extends Fragment {
         });
         return rootView;
     }
+
+
 }
 

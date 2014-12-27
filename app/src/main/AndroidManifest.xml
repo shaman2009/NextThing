@@ -17,5 +17,10 @@
             </intent-filter>
         </activity>
     </application>
-
+    <supports-screens
+        android:anyDensity="true"
+        android:smallScreens="false"
+        android:normalScreens="true"
+        android:largeScreens="true"
+        android:xlargeScreens="true" />
 </manifest>
