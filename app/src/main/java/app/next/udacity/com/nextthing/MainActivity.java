@@ -24,8 +24,7 @@ public class MainActivity extends ActionBarActivity {
                     .add(R.id.container, new NextThingFragment())
                     .commit();
         }
-        int dpi = getResources().getDisplayMetrics().densityDpi ;
-        Log.d("Tag","dpi : "+dpi);
+
 
     }
 
