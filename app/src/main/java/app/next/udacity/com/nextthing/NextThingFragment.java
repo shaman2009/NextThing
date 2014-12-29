@@ -3,6 +3,8 @@ package app.next.udacity.com.nextthing;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,11 +37,30 @@ public class NextThingFragment extends Fragment {
         mNextThingAdapter = new NextThingAdapter();
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.inject(this, rootView);
+
+        //todo back button redefine
+
+        rootView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                Log.e("onKey", "keyCode: " + keyCode);
+
+                if( keyCode == KeyEvent.KEYCODE_BACK ) {
+                    Log.e("onKey", "onKey Back listener is working!!!");
+                    mWebview.setVisibility(View.GONE);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
 
         // ListView
 //        mListView.setVisibility(View.GONE);
