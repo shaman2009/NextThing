@@ -6,15 +6,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
+import app.next.udacity.com.nextthing.model.NextThingPO;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -41,43 +40,56 @@ public class NextThingFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.inject(this, rootView);
-        WebSettings webSettings = mWebview.getSettings();
-        webSettings.setJavaScriptEnabled(true);
 
-
-        mWebview.setWebViewClient(new WebViewClient(){
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true ;
-            }
-        });
-        mWebview.loadUrl(WEB_36_KR);
-        mWebview.setVisibility(View.GONE);
+        // ListView
 //        mListView.setVisibility(View.GONE);
-        for (int i = 0; i < 20; i++) {
-            String data = "title";
-            mNextThingAdapter.addOneData(data);
+        for (int i = 0; i < 2; i++) {
+            NextThingPO po = new NextThingPO();
+            po.setTitle("36Kr");
+            po.setUrl(WEB_36_KR);
+            mNextThingAdapter.addOneData(po);
         }
         mListView.setAdapter(mNextThingAdapter);
         mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-                Toast.makeText(getActivity(), "refresh", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), "refresh", Toast.LENGTH_SHORT).show();
                 for (int i = 0; i < 5; i++) {
-                    String data = "title";
-                    mNextThingAdapter.addOneData(data);
+                    NextThingPO po = new NextThingPO();
+                    po.setTitle("36Kr");
+                    po.setUrl(WEB_36_KR);
+                    mNextThingAdapter.addOneData(po);
                 }
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         mListView.onRefreshComplete();
                     }
-                }, 2000);
-
-
+                }, 100);
             }
         });
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                final NextThingPO po = (NextThingPO)parent.getItemAtPosition(position);
+                view.findViewById(R.id.title).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mWebview.loadUrl(po.getUrl());
+                        mWebview.setVisibility(View.VISIBLE);
+                    }
+                });
+//                view.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//
+//
+//                    }
+//                });
+            }
+        });
+
         return rootView;
     }
 

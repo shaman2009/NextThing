@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import app.next.udacity.com.nextthing.model.NextThingPO;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -16,14 +17,26 @@ import butterknife.InjectView;
  * Created by Shaman on 12/27/14.
  */
 public class NextThingAdapter extends BaseAdapter {
-    private ArrayList<String> arrayList = new ArrayList<>();
+    private ArrayList<NextThingPO> arrayList;
 
-    public void updateData(ArrayList<String> datas){
+    public NextThingAdapter() {
+        arrayList = new ArrayList<>();
+        initData(arrayList);
+    }
+
+    private void initData(ArrayList<NextThingPO> arrayList) {
+        NextThingPO po = new NextThingPO();
+        po.setTitle("PingWest");
+        po.setUrl("http://www.pingwest.com");
+        arrayList.add(po);
+    }
+
+    public void updateData(ArrayList<NextThingPO> datas){
         arrayList.addAll(datas);
         notifyDataSetChanged();
     }
 
-    public void addOneData(String data){
+    public void addOneData(NextThingPO data){
         arrayList.add(data);
         notifyDataSetChanged();
     }
@@ -47,6 +60,13 @@ public class NextThingAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
+        ViewHolder holder = new ViewHolder(convertView);
+        convertView.setTag(holder);
+
+
+        NextThingPO po = (NextThingPO) getItem(position);
+        holder.mTitle.setText(po.getTitle());
+        holder.mDescription.setText(po.getUrl());
         return convertView;
     }
 
