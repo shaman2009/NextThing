@@ -23,6 +23,7 @@ import butterknife.InjectView;
  */
 public class NextThingFragment extends Fragment {
 
+    public static final String WEB_36_KR = "http://www.36kr.com";
     NextThingAdapter mNextThingAdapter;
 
     @InjectView(R.id.listView)
@@ -51,8 +52,9 @@ public class NextThingFragment extends Fragment {
                 return true ;
             }
         });
-        mWebview.loadUrl("http://www.baidu.com");
-
+        mWebview.loadUrl(WEB_36_KR);
+        mWebview.setVisibility(View.GONE);
+//        mListView.setVisibility(View.GONE);
         for (int i = 0; i < 20; i++) {
             String data = "title";
             mNextThingAdapter.addOneData(data);
