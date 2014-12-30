@@ -34,7 +34,7 @@ public class NextThingAdapter extends BaseAdapter {
     }
 
     public void updateData(ArrayList<NextThingPO> datas){
-        arrayList.addAll(datas);
+        arrayList = datas;
         notifyDataSetChanged();
     }
 
