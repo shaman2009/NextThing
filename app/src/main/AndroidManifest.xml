@@ -33,6 +33,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="app.next.udacity.com.nextthing.MainActivity" />
         </activity>
+        <activity
+            android:name=".AddNextThingActivity"
+            android:label="@string/title_activity_add_next_thing"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="app.next.udacity.com.nextthing.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
