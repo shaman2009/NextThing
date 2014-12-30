@@ -23,12 +23,12 @@ public class DetailActivity extends ActionBarActivity {
         ButterKnife.inject(this);
 
         Intent intent = this.getIntent();
-        String url = intent.getStringExtra("url");
-        mTextView.setText(url);
-        if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-            String forecastStr = intent.getStringExtra(Intent.EXTRA_TEXT);
-
+        if (intent != null && intent.hasExtra("url")) {
+            String url = intent.getStringExtra("url");
+            mTextView.setText(url);
         }
+
+
     }
 
 
