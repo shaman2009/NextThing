@@ -1,11 +1,13 @@
 package app.next.udacity.com.nextthing;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -18,7 +20,7 @@ import butterknife.InjectView;
  */
 public class NextThingAdapter extends BaseAdapter {
     private ArrayList<NextThingPO> arrayList;
-
+    WebViewCallBack webViewCallBack;
     public NextThingAdapter() {
         arrayList = new ArrayList<>();
         initData(arrayList);
@@ -64,12 +66,38 @@ public class NextThingAdapter extends BaseAdapter {
         convertView.setTag(holder);
 
 
-        NextThingPO po = (NextThingPO) getItem(position);
+        final NextThingPO po = (NextThingPO) getItem(position);
         holder.mTitle.setText(po.getTitle());
         holder.mDescription.setText(po.getUrl());
+
+        holder.mTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (webViewCallBack != null) {
+                    webViewCallBack.setWebViewVisible(po.getUrl());
+                }
+            }
+        });
+
+        holder.mDescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                po.getUrl();
+
+                Intent intent = new Intent(v.getContext(), DetailActivity.class);
+                intent.putExtra("url", po.getUrl());
+                intent.putExtra("title", po.getTitle());
+                intent.putExtra("description", po.getDescription());
+                intent.putExtra("vote", po.getVote());
+                v.getContext().startActivity(intent);
+            }
+        });
         return convertView;
     }
 
+    public void addCallBack(WebViewCallBack webViewCallBack) {
+        this.webViewCallBack = webViewCallBack;
+    }
 
     /**
      * This class contains all butterknife-injected Views & Layouts from layout file 'item.xml'

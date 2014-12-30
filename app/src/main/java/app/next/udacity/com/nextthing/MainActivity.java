@@ -14,20 +14,28 @@ import android.os.Build;
 
 
 public class MainActivity extends ActionBarActivity {
-
+    NextThingFragment fragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
+            fragment = new NextThingFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new NextThingFragment())
+                    .add(R.id.container, fragment)
                     .commit();
         }
 
 
     }
 
+    @Override
+    public void onBackPressed() {
+        boolean b = fragment.backPress();
+        if (b) {
+            super.onBackPressed();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

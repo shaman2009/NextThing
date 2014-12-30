@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -22,7 +23,7 @@ import butterknife.InjectView;
 /**
  * Created by Shaman on 12/27/14.
  */
-public class NextThingFragment extends Fragment {
+public class NextThingFragment extends Fragment implements WebViewCallBack {
 
     public static final String WEB_36_KR = "http://www.36kr.com";
     NextThingAdapter mNextThingAdapter;
@@ -32,11 +33,13 @@ public class NextThingFragment extends Fragment {
     Handler handler = new Handler();
     @InjectView(R.id.webview)
     WebView mWebview;
+    @InjectView(R.id.webLayout)
+    FrameLayout mWebLayout;
 
     public NextThingFragment() {
         mNextThingAdapter = new NextThingAdapter();
+        mNextThingAdapter.addCallBack(this);
     }
-
 
 
     @Override
@@ -45,22 +48,6 @@ public class NextThingFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.inject(this, rootView);
 
-        //todo back button redefine
-
-        rootView.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                Log.e("onKey", "keyCode: " + keyCode);
-
-                if( keyCode == KeyEvent.KEYCODE_BACK ) {
-                    Log.e("onKey", "onKey Back listener is working!!!");
-                    mWebview.setVisibility(View.GONE);
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        });
 
         // ListView
 //        mListView.setVisibility(View.GONE);
@@ -93,21 +80,13 @@ public class NextThingFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                final NextThingPO po = (NextThingPO)parent.getItemAtPosition(position);
+                final NextThingPO po = (NextThingPO) parent.getItemAtPosition(position);
                 view.findViewById(R.id.title).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mWebview.loadUrl(po.getUrl());
-                        mWebview.setVisibility(View.VISIBLE);
+
                     }
                 });
-//                view.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//
-//
-//                    }
-//                });
             }
         });
 
@@ -115,5 +94,19 @@ public class NextThingFragment extends Fragment {
     }
 
 
+    public boolean backPress() {
+        if (mWebLayout.getVisibility() == View.VISIBLE) {
+            mWebLayout.setVisibility(View.GONE);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public void setWebViewVisible(String url) {
+        mWebview.loadUrl(url);
+        mWebLayout.setVisibility(View.VISIBLE);
+    }
 }
 
