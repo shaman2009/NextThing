@@ -3,8 +3,6 @@ package app.next.udacity.com.nextthing;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +14,9 @@ import android.widget.ListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 import app.next.udacity.com.nextthing.model.NextThingPO;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -26,7 +27,8 @@ import butterknife.InjectView;
 public class NextThingFragment extends Fragment implements WebViewCallBack {
 
     public static final String WEB_36_KR = "http://www.36kr.com";
-    NextThingAdapter mNextThingAdapter;
+    private NextThingAdapter mNextThingAdapter;
+
 
     @InjectView(R.id.listView)
     PullToRefreshListView mListView;
@@ -40,7 +42,28 @@ public class NextThingFragment extends Fragment implements WebViewCallBack {
         mNextThingAdapter = new NextThingAdapter();
         mNextThingAdapter.addCallBack(this);
     }
-
+    interface PullDataCallBack {
+        public void callBack() ;
+    }
+    public void pullData(final PullDataCallBack pullDataCallBack) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final ArrayList<NextThingPO> list = OKHttp.getThings();
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mNextThingAdapter.updateData(list);
+                            pullDataCallBack.callBack();
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,19 +84,22 @@ public class NextThingFragment extends Fragment implements WebViewCallBack {
         mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+
 //                Toast.makeText(getActivity(), "refresh", Toast.LENGTH_SHORT).show();
-                for (int i = 0; i < 5; i++) {
-                    NextThingPO po = new NextThingPO();
-                    po.setTitle("36Kr");
-                    po.setUrl(WEB_36_KR);
-                    mNextThingAdapter.addOneData(po);
-                }
-                handler.postDelayed(new Runnable() {
+//                for (int i = 0; i < 5; i++) {
+//                    NextThingPO po = new NextThingPO();
+//                    po.setTitle("36Kr");
+//                    po.setUrl(WEB_36_KR);
+//                    mNextThingAdapter.addOneData(po);
+//                }
+
+                pullData(new PullDataCallBack() {
                     @Override
-                    public void run() {
+                    public void callBack() {
                         mListView.onRefreshComplete();
                     }
-                }, 100);
+                });
+
             }
         });
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
