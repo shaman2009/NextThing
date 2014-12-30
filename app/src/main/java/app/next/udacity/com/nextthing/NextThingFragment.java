@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
@@ -70,53 +69,31 @@ public class NextThingFragment extends Fragment implements WebViewCallBack {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.inject(this, rootView);
-
-
-        // ListView
-//        mListView.setVisibility(View.GONE);
-        for (int i = 0; i < 2; i++) {
-            NextThingPO po = new NextThingPO();
-            po.setTitle("36Kr");
-            po.setUrl(WEB_36_KR);
-            mNextThingAdapter.addOneData(po);
-        }
+        initData();
         mListView.setAdapter(mNextThingAdapter);
         mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-
-//                Toast.makeText(getActivity(), "refresh", Toast.LENGTH_SHORT).show();
-//                for (int i = 0; i < 5; i++) {
-//                    NextThingPO po = new NextThingPO();
-//                    po.setTitle("36Kr");
-//                    po.setUrl(WEB_36_KR);
-//                    mNextThingAdapter.addOneData(po);
-//                }
-
                 pullData(new PullDataCallBack() {
                     @Override
                     public void callBack() {
                         mListView.onRefreshComplete();
                     }
                 });
-
             }
         });
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                final NextThingPO po = (NextThingPO) parent.getItemAtPosition(position);
-                view.findViewById(R.id.title).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                });
-            }
-        });
-
         return rootView;
+    }
+
+    private void initData() {
+        for (int i = 0; i < 2; i++) {
+            NextThingPO po = new NextThingPO();
+            po.setTitle("36Kr");
+            po.setUrl(WEB_36_KR);
+            po.setDescription(WEB_36_KR);
+            po.setVote(3);
+            mNextThingAdapter.addOneData(po);
+        }
     }
 
 

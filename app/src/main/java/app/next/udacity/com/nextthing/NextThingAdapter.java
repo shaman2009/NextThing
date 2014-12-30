@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -21,24 +20,17 @@ import butterknife.InjectView;
 public class NextThingAdapter extends BaseAdapter {
     private ArrayList<NextThingPO> arrayList;
     WebViewCallBack webViewCallBack;
+
     public NextThingAdapter() {
         arrayList = new ArrayList<>();
-        initData(arrayList);
     }
 
-    private void initData(ArrayList<NextThingPO> arrayList) {
-        NextThingPO po = new NextThingPO();
-        po.setTitle("PingWest");
-        po.setUrl("http://www.pingwest.com");
-        arrayList.add(po);
-    }
-
-    public void updateData(ArrayList<NextThingPO> datas){
+    public void updateData(ArrayList<NextThingPO> datas) {
         arrayList = datas;
         notifyDataSetChanged();
     }
 
-    public void addOneData(NextThingPO data){
+    public void addOneData(NextThingPO data) {
         arrayList.add(data);
         notifyDataSetChanged();
     }
@@ -49,8 +41,7 @@ public class NextThingAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position)
-    {
+    public Object getItem(int position) {
         return arrayList.get(position);
     }
 
@@ -68,7 +59,8 @@ public class NextThingAdapter extends BaseAdapter {
 
         final NextThingPO po = (NextThingPO) getItem(position);
         holder.mTitle.setText(po.getTitle());
-        holder.mDescription.setText(po.getUrl());
+        holder.mDescription.setText(po.getDescription());
+        holder.mLikeCount.setText(String.valueOf(po.getVote()));
 
         holder.mTitle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,8 +74,6 @@ public class NextThingAdapter extends BaseAdapter {
         holder.mDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                po.getUrl();
-
                 Intent intent = new Intent(v.getContext(), DetailActivity.class);
                 intent.putExtra("url", po.getUrl());
                 intent.putExtra("title", po.getTitle());
@@ -99,6 +89,7 @@ public class NextThingAdapter extends BaseAdapter {
         this.webViewCallBack = webViewCallBack;
     }
 
+
     /**
      * This class contains all butterknife-injected Views & Layouts from layout file 'item.xml'
      * for easy to all layout elements.
@@ -108,10 +99,14 @@ public class NextThingAdapter extends BaseAdapter {
     static class ViewHolder {
         @InjectView(R.id.like_count)
         TextView mLikeCount;
+        @InjectView(R.id.like_button)
+        TextView mLikeButton;
         @InjectView(R.id.title)
         TextView mTitle;
         @InjectView(R.id.description)
         TextView mDescription;
+        @InjectView(R.id.url)
+        TextView mUrl;
         @InjectView(R.id.image)
         ImageView mImage;
 
