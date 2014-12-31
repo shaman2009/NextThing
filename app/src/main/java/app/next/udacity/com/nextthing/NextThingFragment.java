@@ -16,6 +16,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import app.next.udacity.com.nextthing.OkHttp.ThingRequest;
 import app.next.udacity.com.nextthing.model.NextThingPO;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -49,7 +50,7 @@ public class NextThingFragment extends Fragment implements WebViewCallBack {
             @Override
             public void run() {
                 try {
-                    final ArrayList<NextThingPO> list = OKHttp.getThings();
+                    final ArrayList<NextThingPO> list = ThingRequest.getThings();
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
