@@ -136,18 +136,12 @@ public class AddNextThingActivity extends ActionBarActivity {
             if (cancel) {
                 focusView.requestFocus();
             } else {
-                addNextThingRequest(new HttpCallBack() {
-                    @Override
-                    public void callBack() {
-
-                    }
-                });
-
+                addNextThingRequest();
             }
 
         }
 
-        public void addNextThingRequest(final HttpCallBack pullDataCallBack) {
+        public void addNextThingRequest() {
             new Thread(new Runnable() {
                 @Override
                 public void run() {

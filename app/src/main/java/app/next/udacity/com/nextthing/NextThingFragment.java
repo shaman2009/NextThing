@@ -44,7 +44,7 @@ public class NextThingFragment extends Fragment implements WebViewCallBack {
         mNextThingAdapter.addCallBack(this);
     }
 
-    public void pullData(final HttpCallBack pullDataCallBack) {
+    public void pullData() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -54,7 +54,7 @@ public class NextThingFragment extends Fragment implements WebViewCallBack {
                         @Override
                         public void run() {
                             mNextThingAdapter.updateData(list);
-                            pullDataCallBack.callBack();
+                            mListView.onRefreshComplete();
                         }
                     });
                 } catch (IOException e) {
@@ -74,12 +74,7 @@ public class NextThingFragment extends Fragment implements WebViewCallBack {
         mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-                pullData(new HttpCallBack() {
-                    @Override
-                    public void callBack() {
-                        mListView.onRefreshComplete();
-                    }
-                });
+                pullData();
             }
         });
         return rootView;
