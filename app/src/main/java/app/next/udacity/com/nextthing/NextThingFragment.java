@@ -16,6 +16,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import app.next.udacity.com.nextthing.OkHttp.HttpCallBack;
 import app.next.udacity.com.nextthing.OkHttp.ThingRequest;
 import app.next.udacity.com.nextthing.model.NextThingPO;
 import butterknife.ButterKnife;
@@ -42,10 +43,8 @@ public class NextThingFragment extends Fragment implements WebViewCallBack {
         mNextThingAdapter = new NextThingAdapter();
         mNextThingAdapter.addCallBack(this);
     }
-    interface PullDataCallBack {
-        public void callBack() ;
-    }
-    public void pullData(final PullDataCallBack pullDataCallBack) {
+
+    public void pullData(final HttpCallBack pullDataCallBack) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -75,7 +74,7 @@ public class NextThingFragment extends Fragment implements WebViewCallBack {
         mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-                pullData(new PullDataCallBack() {
+                pullData(new HttpCallBack() {
                     @Override
                     public void callBack() {
                         mListView.onRefreshComplete();

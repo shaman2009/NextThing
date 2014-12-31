@@ -5,15 +5,17 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="action_add">Add</string>
-    <string name="title_activity_detail">DetailActivity</string>
-    <string name="title_activity_add_next_thing">AddNextThingActivity</string>
+    <string name="title_activity_detail">Detail</string>
+    <string name="title_activity_add_next_thing">AddNextThing</string>
 
     <string name="product_title">Product Title</string>
     <string name="product_url">Product URL</string>
     <string name="product_description">Product Description</string>
     <string name="for_example">For example : 36kr</string>
     <string name="begin_with">begin with http:// ...</string>
-    <string name="descripe_with_one">Description with litte words</string>
+    <string name="describe_with_one">Description with little words</string>
     <string name="submit">Submit</string>
-
+    <string name="error_field_required">This field is required</string>
+    <string name="toast_add_next_thing">Add success !</string>
+    <string name="http_error">Request failed ...</string>
 </resources>

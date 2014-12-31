@@ -50,7 +50,7 @@ public class OkHttp {
         }
     }
 
-    public static String post(URL url, byte[] body) throws IOException {
+    public static OkHttpResponse post(URL url, byte[] body) throws IOException {
 
         HttpURLConnection connection = client.open(url);
         OutputStream out = null;
@@ -63,13 +63,18 @@ public class OkHttp {
             out.close();
 
             // Read the response.
-            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            int responseCode = connection.getResponseCode();
+            if (responseCode >= HttpURLConnection.HTTP_BAD_REQUEST) {
                 in = connection.getErrorStream();
             } else {
                 in = connection.getInputStream();
             }
 
-            return readFirstLine(in);
+            String response = readFirstLine(in);
+            OkHttpResponse ok = new OkHttpResponse();
+            ok.setResponse(response);
+            ok.setHttpCode(responseCode);
+            return ok ;
         } finally {
             // Clean up.
             if (out != null)

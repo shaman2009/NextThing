@@ -1,8 +1,11 @@
 package app.next.udacity.com.nextthing;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,7 +13,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import org.apache.http.HttpStatus;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import app.next.udacity.com.nextthing.OkHttp.HttpCallBack;
+import app.next.udacity.com.nextthing.OkHttp.OkHttpResponse;
+import app.next.udacity.com.nextthing.OkHttp.ThingRequest;
+import app.next.udacity.com.nextthing.model.NextThingPO;
+import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
@@ -54,7 +68,7 @@ public class AddNextThingActivity extends ActionBarActivity {
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
-
+        Handler handler = new Handler();
         @InjectView(R.id.product_title)
         EditText mProductTitle;
         @InjectView(R.id.product_url)
@@ -64,6 +78,11 @@ public class AddNextThingActivity extends ActionBarActivity {
         @InjectView(R.id.submit)
         Button mSubmit;
 
+
+        String url;
+        String description;
+        String title;
+
         public PlaceholderFragment() {
         }
 
@@ -71,7 +90,86 @@ public class AddNextThingActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_add_next_thing, container, false);
+            ButterKnife.inject(this, rootView);
+
+            mSubmit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        attemptSubmit();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
             return rootView;
+        }
+
+        public void attemptSubmit() throws IOException {
+            mProductDescription.setError(null);
+            mProductTitle.setError(null);
+            mProductUrl.setError(null);
+
+            description = mProductDescription.getText().toString();
+            title = mProductTitle.getText().toString();
+            url = mProductUrl.getText().toString();
+
+            boolean cancel = false;
+            View focusView = null;
+
+
+            if (TextUtils.isEmpty(description)) {
+                mProductDescription.setError(getString(R.string.error_field_required));
+                focusView = mProductDescription;
+                cancel = true;
+            }
+            if (TextUtils.isEmpty(url)) {
+                mProductUrl.setError(getString(R.string.error_field_required));
+                focusView = mProductUrl;
+                cancel = true;
+            }
+            if (TextUtils.isEmpty(title)) {
+                mProductTitle.setError(getString(R.string.error_field_required));
+                focusView = mProductTitle;
+                cancel = true;
+            }
+            if (cancel) {
+                focusView.requestFocus();
+            } else {
+                addNextThingRequest(new HttpCallBack() {
+                    @Override
+                    public void callBack() {
+
+                    }
+                });
+
+            }
+
+        }
+
+        public void addNextThingRequest(final HttpCallBack pullDataCallBack) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        OkHttpResponse response = ThingRequest.addThing(title, description, url);
+                        final int code = response.getHttpCode();
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (code >= HttpStatus.SC_BAD_REQUEST) {
+                                    Toast.makeText(getActivity(), R.string.http_error, Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getActivity(), R.string.toast_add_next_thing, Toast.LENGTH_SHORT).show();
+                                }
+
+                            }
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
         }
     }
 }

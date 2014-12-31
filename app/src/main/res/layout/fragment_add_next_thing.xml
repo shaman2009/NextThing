@@ -34,7 +34,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/descripe_with_one"
+        android:hint="@string/describe_with_one"
         android:id="@+id/product_description"/>
 
     <Button
