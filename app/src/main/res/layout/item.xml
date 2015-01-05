@@ -11,12 +11,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="11dp"
             android:id="@+id/like_count"/>
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:text= "@string/like"
