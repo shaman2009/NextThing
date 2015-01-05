@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.AVObject;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -21,6 +23,12 @@ public class MainActivity extends ActionBarActivity {
         }
 
 
+        //AVOS Cloud
+        AVOSCloud.initialize(this, "3qbnbiq4slcvurm8bxr2sgodsx08nhokawmbfnq3miqna2i8", "2nrv5mppo9p33qeoll4mslat4f1uhazk26lluoj88zcxu3ms");
+        AVObject testObject = new AVObject("TestObject");
+        testObject.put("foo", "bar");
+
+        testObject.saveInBackground();
     }
 
     @Override
