@@ -27,7 +27,6 @@ public class MainActivity extends ActionBarActivity {
         AVOSCloud.initialize(this, "3qbnbiq4slcvurm8bxr2sgodsx08nhokawmbfnq3miqna2i8", "2nrv5mppo9p33qeoll4mslat4f1uhazk26lluoj88zcxu3ms");
         AVObject testObject = new AVObject("TestObject");
         testObject.put("foo", "bar");
-
         testObject.saveInBackground();
     }
 

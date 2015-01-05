@@ -15,11 +15,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.SaveCallback;
+
 import org.apache.http.HttpStatus;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
+import app.next.udacity.com.nextthing.LeanCloud.NextThingObject;
 import app.next.udacity.com.nextthing.OkHttp.HttpCallBack;
 import app.next.udacity.com.nextthing.OkHttp.OkHttpResponse;
 import app.next.udacity.com.nextthing.OkHttp.ThingRequest;
@@ -136,9 +140,24 @@ public class AddNextThingActivity extends ActionBarActivity {
             if (cancel) {
                 focusView.requestFocus();
             } else {
-                addNextThingRequest();
+//                addNextThingRequest();
+                addNextThingRequestViaLeanCloud();
             }
 
+        }
+        public void addNextThingRequestViaLeanCloud() {
+            NextThingObject.save(new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    if (e == null) {
+                        //Success
+                        Toast.makeText(getActivity(), R.string.toast_add_next_thing + " ... via LeanCloud", Toast.LENGTH_SHORT).show();
+                    } else {
+                        //Failed
+                        Toast.makeText(getActivity(), "Error : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
 
         public void addNextThingRequest() {
