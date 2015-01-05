@@ -16,7 +16,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import app.next.udacity.com.nextthing.OkHttp.HttpCallBack;
 import app.next.udacity.com.nextthing.OkHttp.ThingRequest;
 import app.next.udacity.com.nextthing.model.NextThingPO;
 import butterknife.ButterKnife;
@@ -44,6 +43,22 @@ public class NextThingFragment extends Fragment implements WebViewCallBack {
         mNextThingAdapter.addCallBack(this);
     }
 
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        ButterKnife.inject(this, rootView);
+        initData();
+        mListView.setAdapter(mNextThingAdapter);
+        mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+            @Override
+            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+                pullData();
+            }
+        });
+        return rootView;
+    }
     public void pullData() {
         new Thread(new Runnable() {
             @Override
@@ -64,21 +79,6 @@ public class NextThingFragment extends Fragment implements WebViewCallBack {
         }).start();
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        ButterKnife.inject(this, rootView);
-        initData();
-        mListView.setAdapter(mNextThingAdapter);
-        mListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
-            @Override
-            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-                pullData();
-            }
-        });
-        return rootView;
-    }
 
     private void initData() {
         for (int i = 0; i < 2; i++) {
