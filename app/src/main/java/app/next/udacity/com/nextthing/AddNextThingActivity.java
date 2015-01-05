@@ -158,15 +158,15 @@ public class AddNextThingActivity extends ActionBarActivity {
         }
 
         public void addNextThingRequestViaLeanCloud() {
-            NextThingObject.save(new SaveCallback() {
+            NextThingObject.save(title, description, url, new SaveCallback() {
                 @Override
                 public void done(AVException e) {
                     if (e == null) {
                         //Success
-                        Toast.makeText(getActivity(), R.string.toast_add_next_thing + " ... via LeanCloud", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.toast_add_next_thing, Toast.LENGTH_SHORT).show();
                     } else {
                         //Failed
-                        Toast.makeText(getActivity(), "Error : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.http_error, Toast.LENGTH_SHORT).show();
                     }
                 }
             });

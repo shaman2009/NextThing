@@ -7,9 +7,22 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.DeleteCallback;
+import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.GetCallback;
+import com.avos.avoscloud.SaveCallback;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import app.next.udacity.com.nextthing.LeanCloud.NextThingObject;
+import app.next.udacity.com.nextthing.LeanCloud.ThingLikeObject;
 import app.next.udacity.com.nextthing.model.NextThingPO;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -53,7 +66,7 @@ public class NextThingAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
-        ViewHolder holder = new ViewHolder(convertView);
+        final ViewHolder holder = new ViewHolder(convertView);
         convertView.setTag(holder);
 
 
@@ -61,7 +74,69 @@ public class NextThingAdapter extends BaseAdapter {
         holder.mTitle.setText(po.getTitle());
         holder.mDescription.setText(po.getDescription());
         holder.mLikeCount.setText(String.valueOf(po.getVote()));
+        AVUser user = AVUser.getCurrentUser();
+        final String userId = user.getObjectId();
+        final String thingId = po.getId();
+        if (po.isLiked()) {
+            holder.mLikeButton.setText(R.string.unlike);
 
+        }
+        holder.mLikeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                AVQuery<AVObject> query = new AVQuery<>(NextThingObject.NEXT_THING);
+                query.getInBackground(thingId, new GetCallback<AVObject>() {
+                    @Override
+                    public void done(AVObject avObject, AVException e) {
+                        if (e == null) {
+                            if (!po.isLiked()) {
+                                final int vote = avObject.getInt(NextThingObject.VOTE) + 1;
+                                avObject.put(NextThingObject.VOTE, vote);
+                                avObject.saveInBackground();
+                                ThingLikeObject.save(userId, thingId, new SaveCallback() {
+                                    @Override
+                                    public void done(AVException e) {
+                                        Toast.makeText(v.getContext(), R.string.like_success, Toast.LENGTH_SHORT).show();
+                                        holder.mLikeButton.setText(R.string.unlike);
+                                        holder.mLikeCount.setText(String.valueOf(vote));
+                                        po.setLiked(true);
+                                    }
+                                });
+                            } else {
+                                final int vote = avObject.getInt(NextThingObject.VOTE) - 1;
+                                avObject.put(NextThingObject.VOTE, vote);
+                                avObject.saveInBackground();
+                                ThingLikeObject.query(userId, thingId, new FindCallback() {
+                                    @Override
+                                    public void done(List list, AVException e) {
+                                        int size = list.size();
+                                        if (size == 0 || size > 1) {
+                                            Toast.makeText(v.getContext(), R.string.http_error, Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            AVObject object = (AVObject)list.get(0);
+                                            object.deleteInBackground(new DeleteCallback() {
+                                                @Override
+                                                public void done(AVException e) {
+                                                    holder.mLikeButton.setText(R.string.like);
+                                                    holder.mLikeCount.setText(String.valueOf(vote));
+                                                    po.setLiked(false);
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+
+
+
+                        } else {
+                            Toast.makeText(v.getContext(), R.string.http_error, Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                });
+            }
+        });
         holder.mTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,6 +157,9 @@ public class NextThingAdapter extends BaseAdapter {
                 v.getContext().startActivity(intent);
             }
         });
+
+
+
         return convertView;
     }
 

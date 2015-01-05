@@ -211,7 +211,6 @@ public class LoginActivity extends Activity {
             if (user != null) {
                 return true;
             } else {
-//                AVQuery<AVUser> query = AVUser.getQuery();
                 user = new AVUser();
                 user.setUsername(mUserName);
                 user.setPassword(mPassword);

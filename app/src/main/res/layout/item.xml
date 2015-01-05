@@ -14,13 +14,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="11dp"
-            android:id="@+id/like_count"
-            android:text="2"/>
+            android:id="@+id/like_count"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text= "like"
+            android:text= "@string/like"
             android:id="@+id/like_button"
             />
 
@@ -35,12 +34,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="足球大师"
             android:id="@+id/title"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="超真实 AI 引擎足球经理人游戏，拥有超过 5000 名球员的实时数据"
             android:id="@+id/description"/>
         <TextView
             android:layout_width="match_parent"

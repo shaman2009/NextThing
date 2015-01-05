@@ -10,12 +10,21 @@ import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.AVUser;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
+import app.next.udacity.com.nextthing.LeanCloud.NextThingObject;
+import app.next.udacity.com.nextthing.LeanCloud.ThingLikeObject;
 import app.next.udacity.com.nextthing.OkHttp.ThingRequest;
 import app.next.udacity.com.nextthing.model.NextThingPO;
 import butterknife.ButterKnife;
@@ -25,10 +34,7 @@ import butterknife.InjectView;
  * Created by Shaman on 12/27/14.
  */
 public class NextThingFragment extends Fragment implements WebViewCallBack {
-
-    public static final String WEB_36_KR = "http://www.36kr.com";
     private NextThingAdapter mNextThingAdapter;
-
 
     @InjectView(R.id.listView)
     PullToRefreshListView mListView;
@@ -64,7 +70,7 @@ public class NextThingFragment extends Fragment implements WebViewCallBack {
             @Override
             public void run() {
                 try {
-                    final ArrayList<NextThingPO> list = ThingRequest.getThings();
+                    final ArrayList<NextThingPO> list = getNextThingPOs();
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -72,23 +78,54 @@ public class NextThingFragment extends Fragment implements WebViewCallBack {
                             mListView.onRefreshComplete();
                         }
                     });
-                } catch (IOException e) {
+                } catch (AVException e) {
                     e.printStackTrace();
                 }
             }
         }).start();
     }
 
+    private ArrayList<NextThingPO> getNextThingPOs() throws AVException {
+
+        AVUser user = AVUser.getCurrentUser();
+        List<AVObject> likeList = null;
+        if (user != null) {
+            AVQuery<AVObject> query = new AVQuery<>(ThingLikeObject.THING_LIKE);
+            query.whereEqualTo(ThingLikeObject.USER_ID, user.getObjectId());
+            likeList = query.find();
+        }
+        final ArrayList<NextThingPO> list = new ArrayList<>();
+        AVQuery<AVObject> query = new AVQuery<>(NextThingObject.NEXT_THING);
+        List<AVObject> avObjectList = query.find();
+        for (AVObject avObject : avObjectList) {
+            NextThingPO nextThingPO = new NextThingPO();
+            nextThingPO.setTitle(avObject.getString(NextThingObject.TITLE));
+            nextThingPO.setDescription(avObject.getString(NextThingObject.DESCRIPTION));
+            nextThingPO.setUrl(avObject.getString(NextThingObject.URL));
+            nextThingPO.setVote(avObject.getInt(NextThingObject.VOTE));
+            nextThingPO.setId(avObject.getObjectId());
+            if (likeList.size() != 0) {
+                for (AVObject object : likeList) {
+                   if (nextThingPO.getId().equals(object.getString(ThingLikeObject.THING_ID))) {
+                        nextThingPO.setLiked(true);
+                    }
+                }
+            }
+            list.add(nextThingPO);
+        }
+
+        Collections.sort(list, new Comparator<NextThingPO>() {
+            @Override
+            public int compare(NextThingPO lhs, NextThingPO rhs) {
+                return rhs.getVote().compareTo(lhs.getVote());
+            }
+        });
+        return list;
+    }
+
 
     private void initData() {
-        for (int i = 0; i < 2; i++) {
-            NextThingPO po = new NextThingPO();
-            po.setTitle("36Kr");
-            po.setUrl(WEB_36_KR);
-            po.setDescription(WEB_36_KR);
-            po.setVote(3);
-            mNextThingAdapter.addOneData(po);
-        }
+
     }
 
 

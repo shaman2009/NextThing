@@ -9,13 +9,18 @@ import com.avos.avoscloud.SaveCallback;
 public class NextThingObject {
 
     public static final String NEXT_THING = "NextThing";
+    public static final String URL = "url";
+    public static final String DESCRIPTION = "description";
+    public static final String TITLE = "title";
+    public static final String VOTE = "vote";
 
-    public static void save (SaveCallback saveCallback) {
+
+    public static void save (String title, String description, String url, SaveCallback saveCallback) {
         AVObject nextThing = new AVObject(NEXT_THING);
-        nextThing.put("url", "http://www.pingwest.com");
-        nextThing.put("description", "科技新闻");
-        nextThing.put("title", "Pingwest");
-        nextThing.put("vote", 0);
+        nextThing.put(URL, url);
+        nextThing.put(DESCRIPTION, description);
+        nextThing.put(TITLE, title);
+        nextThing.put(VOTE, 0);
         nextThing.saveInBackground(saveCallback);
     }
 }

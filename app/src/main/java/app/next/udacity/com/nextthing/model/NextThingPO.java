@@ -4,19 +4,28 @@ package app.next.udacity.com.nextthing.model;
  * Created by Shaman on 12/29/14.
  */
 public class NextThingPO {
-    private Integer id;
+    private String id;
     private String url;
     private String description;
     private String title;
     private Integer vote;
     private long createTime;
     private long modifyTime;
+    private boolean liked;
 
-    public Integer getId() {
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
