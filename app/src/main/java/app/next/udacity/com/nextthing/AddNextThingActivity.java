@@ -1,13 +1,12 @@
 package app.next.udacity.com.nextthing;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,18 +15,16 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.SaveCallback;
 
 import org.apache.http.HttpStatus;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import app.next.udacity.com.nextthing.LeanCloud.NextThingObject;
-import app.next.udacity.com.nextthing.OkHttp.HttpCallBack;
 import app.next.udacity.com.nextthing.OkHttp.OkHttpResponse;
 import app.next.udacity.com.nextthing.OkHttp.ThingRequest;
-import app.next.udacity.com.nextthing.model.NextThingPO;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -96,6 +93,14 @@ public class AddNextThingActivity extends ActionBarActivity {
             View rootView = inflater.inflate(R.layout.fragment_add_next_thing, container, false);
             ButterKnife.inject(this, rootView);
 
+            AVUser currentUser = AVUser.getCurrentUser();
+            if (currentUser == null) {
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                this.startActivity(intent);
+                //缓存用户对象为空时， 可打开用户注册界面…
+            }
+
+
             mSubmit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -123,17 +128,17 @@ public class AddNextThingActivity extends ActionBarActivity {
 
 
             if (TextUtils.isEmpty(description)) {
-                mProductDescription.setError(getString(R.string.error_field_required));
+                mProductDescription.setError(getString(R.string.custom_error_field_required));
                 focusView = mProductDescription;
                 cancel = true;
             }
             if (TextUtils.isEmpty(url)) {
-                mProductUrl.setError(getString(R.string.error_field_required));
+                mProductUrl.setError(getString(R.string.custom_error_field_required));
                 focusView = mProductUrl;
                 cancel = true;
             }
             if (TextUtils.isEmpty(title)) {
-                mProductTitle.setError(getString(R.string.error_field_required));
+                mProductTitle.setError(getString(R.string.custom_error_field_required));
                 focusView = mProductTitle;
                 cancel = true;
             }

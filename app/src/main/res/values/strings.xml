@@ -15,7 +15,8 @@
     <string name="begin_with">begin with http:// ...</string>
     <string name="describe_with_one">Description with little words</string>
     <string name="submit">Submit</string>
-    <string name="error_field_required">This field is required</string>
+    <string name="custom_error_field_required">This field is required</string>
     <string name="toast_add_next_thing">Add success !</string>
     <string name="http_error">Request failed ...</string>
+
 </resources>
