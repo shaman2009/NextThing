@@ -83,6 +83,8 @@ public class AddNextThingActivity extends ActionBarActivity {
         String url;
         String description;
         String title;
+        @InjectView(R.id.logout)
+        Button mLogout;
 
         public PlaceholderFragment() {
         }
@@ -97,9 +99,13 @@ public class AddNextThingActivity extends ActionBarActivity {
             if (currentUser == null) {
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 this.startActivity(intent);
-                //缓存用户对象为空时， 可打开用户注册界面…
             }
-
+            mLogout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AVUser.logOut();
+                }
+            });
 
             mSubmit.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -150,6 +156,7 @@ public class AddNextThingActivity extends ActionBarActivity {
             }
 
         }
+
         public void addNextThingRequestViaLeanCloud() {
             NextThingObject.save(new SaveCallback() {
                 @Override

@@ -18,5 +18,6 @@
     <string name="custom_error_field_required">This field is required</string>
     <string name="toast_add_next_thing">Add success !</string>
     <string name="http_error">Request failed ...</string>
+    <string name="logout">Logout</string>
 
 </resources>

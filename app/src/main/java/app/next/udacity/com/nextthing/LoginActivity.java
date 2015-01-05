@@ -201,7 +201,6 @@ public class LoginActivity extends Activity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
             AVUser user = null;
             try {
                 user = AVUser.logIn(mUserName, mPassword);
