@@ -22,5 +22,6 @@
     <string name="like_success">Like Success !</string>
     <string name="unlike">unlike</string>
     <string name="like">like</string>
+    <string name="action_share">Share</string>
 
 </resources>

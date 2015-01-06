@@ -48,10 +48,21 @@ public class DetailActivity extends FragmentActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_share) {
+            String url = mTextView.getText().toString();
+            share(url);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    public void share(String text) {
+        String subject = this.getString(R.string.action_share);
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, text);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        this.startActivity(Intent.createChooser(intent, subject));
     }
 }
