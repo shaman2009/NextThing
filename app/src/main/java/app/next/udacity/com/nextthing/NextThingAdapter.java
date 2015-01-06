@@ -23,9 +23,9 @@ import com.avos.avoscloud.SaveCallback;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.next.udacity.com.nextthing.GreenDao.Next;
 import app.next.udacity.com.nextthing.LeanCloud.NextThingObject;
 import app.next.udacity.com.nextthing.LeanCloud.ThingLikeObject;
-import app.next.udacity.com.nextthing.model.NextThingPO;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -33,31 +33,25 @@ import butterknife.InjectView;
  * Created by Shaman on 12/27/14.
  */
 public class NextThingAdapter extends BaseAdapter {
-    private ArrayList<NextThingPO> arrayList;
+    private List<Next> list;
     WebViewCallBack webViewCallBack;
 
     public NextThingAdapter() {
-        arrayList = new ArrayList<>();
+        list = new ArrayList<>();
     }
 
-    public void updateData(ArrayList<NextThingPO> datas) {
-        arrayList = datas;
+    public void updateData(List<Next> datas) {
+        list = datas;
         notifyDataSetChanged();
     }
-
-    public void addOneData(NextThingPO data) {
-        arrayList.add(data);
-        notifyDataSetChanged();
-    }
-
     @Override
     public int getCount() {
-        return arrayList.size();
+        return list.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return arrayList.get(position);
+        return list.get(position);
     }
 
     @Override
@@ -72,15 +66,15 @@ public class NextThingAdapter extends BaseAdapter {
         convertView.setTag(holder);
 
 
-        final NextThingPO po = (NextThingPO) getItem(position);
+        final Next po = (Next) getItem(position);
         holder.mTitle.setText(po.getTitle());
         holder.mDescription.setText(po.getDescription());
         holder.mLikeCount.setText(String.valueOf(po.getVote()));
         AVUser user = AVUser.getCurrentUser();
         if (user != null) {
             final String userId = user.getObjectId();
-            final String thingId = po.getId();
-            if (po.isLiked()) {
+            final String thingId = po.getObjectId();
+            if (po.getLiked()) {
                 holder.mLikeButton.setText(R.string.unlike);
 
             }
@@ -92,7 +86,7 @@ public class NextThingAdapter extends BaseAdapter {
                         @Override
                         public void done(AVObject avObject, AVException e) {
                             if (e == null) {
-                                if (!po.isLiked()) {
+                                if (!po.getLiked()) {
                                     final int vote = avObject.getInt(NextThingObject.VOTE) + 1;
                                     avObject.put(NextThingObject.VOTE, vote);
                                     avObject.saveInBackground();

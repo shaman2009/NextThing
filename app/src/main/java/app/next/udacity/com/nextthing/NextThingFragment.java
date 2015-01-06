@@ -26,7 +26,6 @@ import app.next.udacity.com.nextthing.GreenDao.Dao;
 import app.next.udacity.com.nextthing.GreenDao.Next;
 import app.next.udacity.com.nextthing.LeanCloud.NextThingObject;
 import app.next.udacity.com.nextthing.LeanCloud.ThingLikeObject;
-import app.next.udacity.com.nextthing.model.NextThingPO;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
@@ -70,7 +69,7 @@ public class NextThingFragment extends Fragment implements WebViewCallBack {
             @Override
             public void run() {
                 try {
-                    final ArrayList<NextThingPO> list = getNextThingPOs();
+                    final ArrayList<Next> list = getNextThingPOs();
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -85,7 +84,7 @@ public class NextThingFragment extends Fragment implements WebViewCallBack {
         }).start();
     }
 
-    private ArrayList<NextThingPO> getNextThingPOs() throws AVException {
+    private ArrayList<Next> getNextThingPOs() throws AVException {
 
         AVUser user = AVUser.getCurrentUser();
         List<AVObject> likeList = null;
@@ -94,44 +93,39 @@ public class NextThingFragment extends Fragment implements WebViewCallBack {
             query.whereEqualTo(ThingLikeObject.USER_ID, user.getObjectId());
             likeList = query.find();
         }
-        final ArrayList<NextThingPO> list = new ArrayList<>();
+        final ArrayList<Next> list = new ArrayList<>();
         AVQuery<AVObject> query = new AVQuery<>(NextThingObject.NEXT_THING);
         List<AVObject> avObjectList = query.find();
         for (AVObject avObject : avObjectList) {
-            NextThingPO nextThingPO = new NextThingPO();
-            nextThingPO.setTitle(avObject.getString(NextThingObject.TITLE));
-            nextThingPO.setDescription(avObject.getString(NextThingObject.DESCRIPTION));
-            nextThingPO.setUrl(avObject.getString(NextThingObject.URL));
-            nextThingPO.setVote(avObject.getInt(NextThingObject.VOTE));
-            nextThingPO.setId(avObject.getObjectId());
+            Next next = new Next();
+            next.setTitle(avObject.getString(NextThingObject.TITLE));
+            next.setDescription(avObject.getString(NextThingObject.DESCRIPTION));
+            next.setUrl(avObject.getString(NextThingObject.URL));
+            next.setVote(avObject.getInt(NextThingObject.VOTE));
+            next.setObjectId(avObject.getObjectId());
+            next.setLiked(false);
             if (likeList != null && likeList.size() != 0) {
                 for (AVObject object : likeList) {
-                   if (nextThingPO.getId().equals(object.getString(ThingLikeObject.THING_ID))) {
-                        nextThingPO.setLiked(true);
+                   if (next.getObjectId().equals(object.getString(ThingLikeObject.THING_ID))) {
+                        next.setLiked(true);
                     }
                 }
             }
-            list.add(nextThingPO);
+            list.add(next);
         }
 
-        Collections.sort(list, new Comparator<NextThingPO>() {
+
+        Collections.sort(list, new Comparator<Next>() {
             @Override
-            public int compare(NextThingPO lhs, NextThingPO rhs) {
-                return rhs.getVote().compareTo(lhs.getVote());
+            public int compare(Next lhs, Next rhs) {
+                return ((Integer)rhs.getVote()).compareTo(lhs.getVote());
             }
         });
 
 
-        for (NextThingPO nextThingPO : list) {
-            Next next = new Next();
-            next.setUrl(nextThingPO.getUrl());
-            next.setDescription(nextThingPO.getDescription());
-            next.setObjectId(nextThingPO.getId());
-            next.setLiked(nextThingPO.isLiked());
-            next.setTitle(nextThingPO.getTitle());
-            next.setVote(nextThingPO.getVote());
+        for (Next nextThingPO : list) {
             Dao dao = new Dao(this.getActivity());
-            dao.insert(next);
+            dao.insert(nextThingPO);
         }
         return list;
     }
@@ -140,18 +134,7 @@ public class NextThingFragment extends Fragment implements WebViewCallBack {
     private void initData() {
         Dao dao = new Dao(this.getActivity());
         List<Next> list = dao.get();
-        ArrayList<NextThingPO> nextThingPOList = new ArrayList<>();
-        for (Next next : list) {
-            NextThingPO po = new NextThingPO();
-            po.setUrl(next.getUrl());
-            po.setDescription(next.getDescription());
-            po.setId(next.getObjectId());
-            po.setLiked(next.getLiked());
-            po.setTitle(next.getTitle());
-            po.setVote(next.getVote());
-            nextThingPOList.add(po);
-        }
-        mNextThingAdapter.updateData(nextThingPOList);
+        mNextThingAdapter.updateData(list);
     }
 
 

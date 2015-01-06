@@ -3,13 +3,14 @@ package app.next.udacity.com.nextthing.OkHttp;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.next.udacity.com.nextthing.model.NextThingPO;
+import app.next.udacity.com.nextthing.GreenDao.Next;
 import app.next.udacity.com.nextthing.model.NextThingRequestPO;
 
 /**
@@ -19,12 +20,12 @@ public class ThingRequest {
 
     public static final String THING_URL = "http://v.zivoo.cn:8080/indefensible-launcher/thing";
 
-    public static ArrayList<NextThingPO> getThings() throws IOException {
+    public static ArrayList<Next> getThings() throws IOException {
         String response = OkHttp.get(new URL(THING_URL));
-        Type listType = new TypeToken<List<NextThingPO>>() {}.getType();
-        ArrayList<NextThingPO> list = new Gson().fromJson(response, listType);
-        for (NextThingPO nextThingPO : list) {
-            System.out.println(nextThingPO.getTitle());
+        Type listType = new TypeToken<List<Next>>() {}.getType();
+        ArrayList<Next> list = new Gson().fromJson(response, listType);
+        for (Next next : list) {
+            System.out.println(next.getTitle());
         }
         return list;
     }
