@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="android:Theme.Material"></style>
+    <style name="AppTheme" parent="android:Theme.Material.Light">
+
+
+
+
+
+
+    <item name="android:colorPrimary">#AA66CC</item>
+    <item name="android:textColorPrimary">@color/bright_foreground_inverse_material_light</item>
+    <item name="android:colorPrimaryDark">#9933CC</item>
+    <item name="android:navigationBarColor">#9933CC</item>
+    <item name="android:windowBackground">@color/button_material_light</item>
+
+    </style>
 </resources>
