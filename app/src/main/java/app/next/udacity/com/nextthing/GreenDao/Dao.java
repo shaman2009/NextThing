@@ -33,4 +33,9 @@ public class Dao {
         List<Next> list = dao.queryBuilder().build().list();
         return list;
     }
+
+    public void update(Next next) {
+        NextDao dao = daoSession.getNextDao();
+        dao.update(next);
+    }
 }

@@ -23,6 +23,7 @@ import com.avos.avoscloud.SaveCallback;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.next.udacity.com.nextthing.GreenDao.Dao;
 import app.next.udacity.com.nextthing.GreenDao.Next;
 import app.next.udacity.com.nextthing.LeanCloud.NextThingObject;
 import app.next.udacity.com.nextthing.LeanCloud.ThingLikeObject;
@@ -97,6 +98,9 @@ public class NextThingAdapter extends BaseAdapter {
                                             holder.mLikeButton.setText(R.string.unlike);
                                             holder.mLikeCount.setText(String.valueOf(vote));
                                             po.setLiked(true);
+                                            po.setVote(vote);
+                                            Dao dao = new Dao(v.getContext());
+                                            dao.update(po);
                                         }
                                     });
                                 } else {
@@ -117,6 +121,9 @@ public class NextThingAdapter extends BaseAdapter {
                                                         holder.mLikeButton.setText(R.string.like);
                                                         holder.mLikeCount.setText(String.valueOf(vote));
                                                         po.setLiked(false);
+                                                        po.setVote(vote);
+                                                        Dao dao = new Dao(v.getContext());
+                                                        dao.update(po);
                                                     }
                                                 });
                                             }
