@@ -75,68 +75,77 @@ public class NextThingAdapter extends BaseAdapter {
         holder.mDescription.setText(po.getDescription());
         holder.mLikeCount.setText(String.valueOf(po.getVote()));
         AVUser user = AVUser.getCurrentUser();
-        final String userId = user.getObjectId();
-        final String thingId = po.getId();
-        if (po.isLiked()) {
-            holder.mLikeButton.setText(R.string.unlike);
+        if (user != null) {
+            final String userId = user.getObjectId();
+            final String thingId = po.getId();
+            if (po.isLiked()) {
+                holder.mLikeButton.setText(R.string.unlike);
 
-        }
-        holder.mLikeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                AVQuery<AVObject> query = new AVQuery<>(NextThingObject.NEXT_THING);
-                query.getInBackground(thingId, new GetCallback<AVObject>() {
-                    @Override
-                    public void done(AVObject avObject, AVException e) {
-                        if (e == null) {
-                            if (!po.isLiked()) {
-                                final int vote = avObject.getInt(NextThingObject.VOTE) + 1;
-                                avObject.put(NextThingObject.VOTE, vote);
-                                avObject.saveInBackground();
-                                ThingLikeObject.save(userId, thingId, new SaveCallback() {
-                                    @Override
-                                    public void done(AVException e) {
-                                        Toast.makeText(v.getContext(), R.string.like_success, Toast.LENGTH_SHORT).show();
-                                        holder.mLikeButton.setText(R.string.unlike);
-                                        holder.mLikeCount.setText(String.valueOf(vote));
-                                        po.setLiked(true);
-                                    }
-                                });
-                            } else {
-                                final int vote = avObject.getInt(NextThingObject.VOTE) - 1;
-                                avObject.put(NextThingObject.VOTE, vote);
-                                avObject.saveInBackground();
-                                ThingLikeObject.query(userId, thingId, new FindCallback() {
-                                    @Override
-                                    public void done(List list, AVException e) {
-                                        int size = list.size();
-                                        if (size == 0 || size > 1) {
-                                            Toast.makeText(v.getContext(), R.string.http_error, Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            AVObject object = (AVObject)list.get(0);
-                                            object.deleteInBackground(new DeleteCallback() {
-                                                @Override
-                                                public void done(AVException e) {
-                                                    holder.mLikeButton.setText(R.string.like);
-                                                    holder.mLikeCount.setText(String.valueOf(vote));
-                                                    po.setLiked(false);
-                                                }
-                                            });
-                                        }
-                                    }
-                                });
-                            }
-
-
-
-                        } else {
-                            Toast.makeText(v.getContext(), R.string.http_error, Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-                });
             }
-        });
+            holder.mLikeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    AVQuery<AVObject> query = new AVQuery<>(NextThingObject.NEXT_THING);
+                    query.getInBackground(thingId, new GetCallback<AVObject>() {
+                        @Override
+                        public void done(AVObject avObject, AVException e) {
+                            if (e == null) {
+                                if (!po.isLiked()) {
+                                    final int vote = avObject.getInt(NextThingObject.VOTE) + 1;
+                                    avObject.put(NextThingObject.VOTE, vote);
+                                    avObject.saveInBackground();
+                                    ThingLikeObject.save(userId, thingId, new SaveCallback() {
+                                        @Override
+                                        public void done(AVException e) {
+                                            Toast.makeText(v.getContext(), R.string.like_success, Toast.LENGTH_SHORT).show();
+                                            holder.mLikeButton.setText(R.string.unlike);
+                                            holder.mLikeCount.setText(String.valueOf(vote));
+                                            po.setLiked(true);
+                                        }
+                                    });
+                                } else {
+                                    final int vote = avObject.getInt(NextThingObject.VOTE) - 1;
+                                    avObject.put(NextThingObject.VOTE, vote);
+                                    avObject.saveInBackground();
+                                    ThingLikeObject.query(userId, thingId, new FindCallback() {
+                                        @Override
+                                        public void done(List list, AVException e) {
+                                            int size = list.size();
+                                            if (size == 0 || size > 1) {
+                                                Toast.makeText(v.getContext(), R.string.http_error, Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                AVObject object = (AVObject)list.get(0);
+                                                object.deleteInBackground(new DeleteCallback() {
+                                                    @Override
+                                                    public void done(AVException e) {
+                                                        holder.mLikeButton.setText(R.string.like);
+                                                        holder.mLikeCount.setText(String.valueOf(vote));
+                                                        po.setLiked(false);
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });
+                                }
+                            } else {
+                                Toast.makeText(v.getContext(), R.string.http_error, Toast.LENGTH_SHORT).show();
+
+                            }
+                        }
+                    });
+                }
+            });
+        } else {
+            holder.mLikeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), LoginActivity.class);
+                    v.getContext().startActivity(intent);
+                }
+            });
+        }
+
+
         holder.mTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

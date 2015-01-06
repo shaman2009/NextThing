@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -29,7 +30,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
-public class AddNextThingActivity extends ActionBarActivity {
+public class AddNextThingActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

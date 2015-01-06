@@ -32,7 +32,8 @@ dependencies {
     //
     compile project(':pull-to-refresh-library')
 
-    compile 'com.android.support:appcompat-v7:21.0.2'
+
+    compile "com.android.support:appcompat-v7:21.0.+"
     compile 'com.jakewharton:butterknife:6.0.0'
     compile 'com.squareup.okhttp:okhttp:1.2.1'
     compile 'com.google.code.gson:gson:1.7.2'

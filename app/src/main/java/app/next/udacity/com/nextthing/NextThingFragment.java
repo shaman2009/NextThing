@@ -104,7 +104,7 @@ public class NextThingFragment extends Fragment implements WebViewCallBack {
             nextThingPO.setUrl(avObject.getString(NextThingObject.URL));
             nextThingPO.setVote(avObject.getInt(NextThingObject.VOTE));
             nextThingPO.setId(avObject.getObjectId());
-            if (likeList.size() != 0) {
+            if (likeList != null && likeList.size() != 0) {
                 for (AVObject object : likeList) {
                    if (nextThingPO.getId().equals(object.getString(ThingLikeObject.THING_ID))) {
                         nextThingPO.setLiked(true);
