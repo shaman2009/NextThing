@@ -1,11 +1,13 @@
 package app.next.udacity.com.nextthing;
 
 import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,7 +84,7 @@ public class NextThingAdapter extends BaseAdapter {
                 holder.mLikeButton.setText(R.string.unlike);
 
             }
-            holder.mLikeButton.setOnClickListener(new View.OnClickListener() {
+            holder.mLikeLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
                     AVQuery<AVObject> query = new AVQuery<>(NextThingObject.NEXT_THING);
@@ -114,7 +116,7 @@ public class NextThingAdapter extends BaseAdapter {
                                             if (size == 0 || size > 1) {
                                                 Toast.makeText(v.getContext(), R.string.http_error, Toast.LENGTH_SHORT).show();
                                             } else {
-                                                AVObject object = (AVObject)list.get(0);
+                                                AVObject object = (AVObject) list.get(0);
                                                 object.deleteInBackground(new DeleteCallback() {
                                                     @Override
                                                     public void done(AVException e) {
@@ -136,7 +138,7 @@ public class NextThingAdapter extends BaseAdapter {
                 }
             });
         } else {
-            holder.mLikeButton.setOnClickListener(new View.OnClickListener() {
+            holder.mLikeLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), LoginActivity.class);
@@ -168,7 +170,6 @@ public class NextThingAdapter extends BaseAdapter {
         });
 
 
-
         return convertView;
     }
 
@@ -188,6 +189,8 @@ public class NextThingAdapter extends BaseAdapter {
         TextView mLikeCount;
         @InjectView(R.id.like_button)
         TextView mLikeButton;
+        @InjectView(R.id.like_layout)
+        LinearLayout mLikeLayout;
         @InjectView(R.id.title)
         TextView mTitle;
         @InjectView(R.id.description)
@@ -196,6 +199,8 @@ public class NextThingAdapter extends BaseAdapter {
         TextView mUrl;
         @InjectView(R.id.image)
         ImageView mImage;
+        @InjectView(R.id.card_view)
+        CardView mCardView;
 
         ViewHolder(View view) {
             ButterKnife.inject(this, view);
