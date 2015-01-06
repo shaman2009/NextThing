@@ -22,6 +22,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import app.next.udacity.com.nextthing.GreenDao.Dao;
+import app.next.udacity.com.nextthing.GreenDao.Next;
 import app.next.udacity.com.nextthing.LeanCloud.NextThingObject;
 import app.next.udacity.com.nextthing.LeanCloud.ThingLikeObject;
 import app.next.udacity.com.nextthing.model.NextThingPO;
@@ -118,12 +120,38 @@ public class NextThingFragment extends Fragment implements WebViewCallBack {
                 return rhs.getVote().compareTo(lhs.getVote());
             }
         });
+
+
+        for (NextThingPO nextThingPO : list) {
+            Next next = new Next();
+            next.setUrl(nextThingPO.getUrl());
+            next.setDescription(nextThingPO.getDescription());
+            next.setObjectId(nextThingPO.getId());
+            next.setLiked(nextThingPO.isLiked());
+            next.setTitle(nextThingPO.getTitle());
+            next.setVote(nextThingPO.getVote());
+            Dao dao = new Dao(this.getActivity());
+            dao.insert(next);
+        }
         return list;
     }
 
 
     private void initData() {
-
+        Dao dao = new Dao(this.getActivity());
+        List<Next> list = dao.get();
+        ArrayList<NextThingPO> nextThingPOList = new ArrayList<>();
+        for (Next next : list) {
+            NextThingPO po = new NextThingPO();
+            po.setUrl(next.getUrl());
+            po.setDescription(next.getDescription());
+            po.setId(next.getObjectId());
+            po.setLiked(next.getLiked());
+            po.setTitle(next.getTitle());
+            po.setVote(next.getVote());
+            nextThingPOList.add(po);
+        }
+        mNextThingAdapter.updateData(nextThingPOList);
     }
 
 
