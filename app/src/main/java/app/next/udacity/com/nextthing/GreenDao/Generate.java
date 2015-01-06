@@ -57,7 +57,8 @@ public class Generate {
         next.addStringProperty("description").notNull();
         next.addStringProperty("title").notNull();
         next.addIntProperty("vote").notNull();
-        next.addBooleanProperty("liked");
+        next.addBooleanProperty("liked").notNull();
+        next.addStringProperty("userId").notNull();
         next.addDateProperty("createTime");
         next.addDateProperty("modifyTime");
 

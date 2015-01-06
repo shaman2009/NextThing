@@ -121,11 +121,24 @@ public class NextThingFragment extends Fragment implements WebViewCallBack {
                 return ((Integer)rhs.getVote()).compareTo(lhs.getVote());
             }
         });
-
-
-        for (Next nextThingPO : list) {
+        String userId;
+        if (user != null) {
+            userId = user.getObjectId();
+        } else {
+            userId = "anonymous";
+        }
+        for (Next next : list) {
             Dao dao = new Dao(this.getActivity());
-            dao.insert(nextThingPO);
+            next.setUserId(userId);
+            List<Next> result = dao.get(next.getObjectId(), userId);
+            if (result.size() == 0) {
+                dao.insert(next);
+            } else {
+                Next n = result.get(0);
+                next.setId(n.getId());
+                dao.update(next);
+            }
+
         }
         return list;
     }

@@ -38,4 +38,14 @@ public class Dao {
         NextDao dao = daoSession.getNextDao();
         dao.update(next);
     }
+
+    public List<Next> get(String objectId, String userId) {
+        NextDao dao = daoSession.getNextDao();
+        List<Next> list = dao.queryBuilder()
+                .where(NextDao.Properties.ObjectId.eq(objectId))
+                .where(NextDao.Properties.UserId.eq(userId))
+                .build()
+                .list();
+        return list;
+    }
 }
