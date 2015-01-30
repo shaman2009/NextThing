@@ -16,9 +16,7 @@ public class Next {
     /** Not-null value. */
     private String title;
     private int vote;
-    private boolean liked;
-    /** Not-null value. */
-    private String userId;
+    private Boolean liked;
     private java.util.Date createTime;
     private java.util.Date modifyTime;
 
@@ -29,7 +27,7 @@ public class Next {
         this.id = id;
     }
 
-    public Next(Long id, String objectId, String url, String description, String title, int vote, boolean liked, String userId, java.util.Date createTime, java.util.Date modifyTime) {
+    public Next(Long id, String objectId, String url, String description, String title, int vote, Boolean liked, java.util.Date createTime, java.util.Date modifyTime) {
         this.id = id;
         this.objectId = objectId;
         this.url = url;
@@ -37,7 +35,6 @@ public class Next {
         this.title = title;
         this.vote = vote;
         this.liked = liked;
-        this.userId = userId;
         this.createTime = createTime;
         this.modifyTime = modifyTime;
     }
@@ -98,22 +95,12 @@ public class Next {
         this.vote = vote;
     }
 
-    public boolean getLiked() {
+    public Boolean getLiked() {
         return liked;
     }
 
-    public void setLiked(boolean liked) {
+    public void setLiked(Boolean liked) {
         this.liked = liked;
-    }
-
-    /** Not-null value. */
-    public String getUserId() {
-        return userId;
-    }
-
-    /** Not-null value; ensure this value is available before it is saved to the database. */
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public java.util.Date getCreateTime() {

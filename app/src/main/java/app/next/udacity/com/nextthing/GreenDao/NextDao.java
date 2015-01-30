@@ -29,10 +29,9 @@ public class NextDao extends AbstractDao<Next, Long> {
         public final static Property Description = new Property(3, String.class, "description", false, "DESCRIPTION");
         public final static Property Title = new Property(4, String.class, "title", false, "TITLE");
         public final static Property Vote = new Property(5, int.class, "vote", false, "VOTE");
-        public final static Property Liked = new Property(6, boolean.class, "liked", false, "LIKED");
-        public final static Property UserId = new Property(7, String.class, "userId", false, "USER_ID");
-        public final static Property CreateTime = new Property(8, java.util.Date.class, "createTime", false, "CREATE_TIME");
-        public final static Property ModifyTime = new Property(9, java.util.Date.class, "modifyTime", false, "MODIFY_TIME");
+        public final static Property Liked = new Property(6, Boolean.class, "liked", false, "LIKED");
+        public final static Property CreateTime = new Property(7, java.util.Date.class, "createTime", false, "CREATE_TIME");
+        public final static Property ModifyTime = new Property(8, java.util.Date.class, "modifyTime", false, "MODIFY_TIME");
     };
 
 
@@ -54,10 +53,9 @@ public class NextDao extends AbstractDao<Next, Long> {
                 "'DESCRIPTION' TEXT NOT NULL ," + // 3: description
                 "'TITLE' TEXT NOT NULL ," + // 4: title
                 "'VOTE' INTEGER NOT NULL ," + // 5: vote
-                "'LIKED' INTEGER NOT NULL ," + // 6: liked
-                "'USER_ID' TEXT NOT NULL ," + // 7: userId
-                "'CREATE_TIME' INTEGER," + // 8: createTime
-                "'MODIFY_TIME' INTEGER);"); // 9: modifyTime
+                "'LIKED' INTEGER," + // 6: liked
+                "'CREATE_TIME' INTEGER," + // 7: createTime
+                "'MODIFY_TIME' INTEGER);"); // 8: modifyTime
     }
 
     /** Drops the underlying database table. */
@@ -80,17 +78,20 @@ public class NextDao extends AbstractDao<Next, Long> {
         stmt.bindString(4, entity.getDescription());
         stmt.bindString(5, entity.getTitle());
         stmt.bindLong(6, entity.getVote());
-        stmt.bindLong(7, entity.getLiked() ? 1l: 0l);
-        stmt.bindString(8, entity.getUserId());
+ 
+        Boolean liked = entity.getLiked();
+        if (liked != null) {
+            stmt.bindLong(7, liked ? 1l: 0l);
+        }
  
         java.util.Date createTime = entity.getCreateTime();
         if (createTime != null) {
-            stmt.bindLong(9, createTime.getTime());
+            stmt.bindLong(8, createTime.getTime());
         }
  
         java.util.Date modifyTime = entity.getModifyTime();
         if (modifyTime != null) {
-            stmt.bindLong(10, modifyTime.getTime());
+            stmt.bindLong(9, modifyTime.getTime());
         }
     }
 
@@ -110,10 +111,9 @@ public class NextDao extends AbstractDao<Next, Long> {
             cursor.getString(offset + 3), // description
             cursor.getString(offset + 4), // title
             cursor.getInt(offset + 5), // vote
-            cursor.getShort(offset + 6) != 0, // liked
-            cursor.getString(offset + 7), // userId
-            cursor.isNull(offset + 8) ? null : new java.util.Date(cursor.getLong(offset + 8)), // createTime
-            cursor.isNull(offset + 9) ? null : new java.util.Date(cursor.getLong(offset + 9)) // modifyTime
+            cursor.isNull(offset + 6) ? null : cursor.getShort(offset + 6) != 0, // liked
+            cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)), // createTime
+            cursor.isNull(offset + 8) ? null : new java.util.Date(cursor.getLong(offset + 8)) // modifyTime
         );
         return entity;
     }
@@ -127,10 +127,9 @@ public class NextDao extends AbstractDao<Next, Long> {
         entity.setDescription(cursor.getString(offset + 3));
         entity.setTitle(cursor.getString(offset + 4));
         entity.setVote(cursor.getInt(offset + 5));
-        entity.setLiked(cursor.getShort(offset + 6) != 0);
-        entity.setUserId(cursor.getString(offset + 7));
-        entity.setCreateTime(cursor.isNull(offset + 8) ? null : new java.util.Date(cursor.getLong(offset + 8)));
-        entity.setModifyTime(cursor.isNull(offset + 9) ? null : new java.util.Date(cursor.getLong(offset + 9)));
+        entity.setLiked(cursor.isNull(offset + 6) ? null : cursor.getShort(offset + 6) != 0);
+        entity.setCreateTime(cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)));
+        entity.setModifyTime(cursor.isNull(offset + 8) ? null : new java.util.Date(cursor.getLong(offset + 8)));
      }
     
     /** @inheritdoc */
